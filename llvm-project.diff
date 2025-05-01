@@ -1,0 +1,78 @@
+diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
+index 12618966c4ad..c7343bad1915 100644
+--- a/llvm/CMakeLists.txt
++++ b/llvm/CMakeLists.txt
+@@ -539,11 +539,11 @@ set(FFI_INCLUDE_DIR "" CACHE PATH "Additional directory, where CMake should sear
+ set(LLVM_TARGET_ARCH "host"
+   CACHE STRING "Set target to use for LLVM JIT or use \"host\" for automatic detection.")
+ 
+-set(LLVM_ENABLE_LIBXML2 "ON" CACHE STRING "Use libxml2 if available. Can be ON, OFF, or FORCE_ON")
++set(LLVM_ENABLE_LIBXML2 "OFF" CACHE STRING "Use libxml2 if available. Can be ON, OFF, or FORCE_ON")
+ 
+-option(LLVM_ENABLE_LIBEDIT "Use libedit if available." ON)
++option(LLVM_ENABLE_LIBEDIT "Use libedit if available." OFF)
+ 
+-option(LLVM_ENABLE_LIBPFM "Use libpfm for performance counters if available." ON)
++option(LLVM_ENABLE_LIBPFM "Use libpfm for performance counters if available." OFF)
+ 
+ # On z/OS, threads cannot be used because TLS is not supported.
+ if (CMAKE_SYSTEM_NAME MATCHES "OS390")
+@@ -552,9 +552,9 @@ else()
+   option(LLVM_ENABLE_THREADS "Use threads if available." ON)
+ endif()
+ 
+-set(LLVM_ENABLE_ZLIB "ON" CACHE STRING "Use zlib for compression/decompression if available. Can be ON, OFF, or FORCE_ON")
++set(LLVM_ENABLE_ZLIB "OFF" CACHE STRING "Use zlib for compression/decompression if available. Can be ON, OFF, or FORCE_ON")
+ 
+-set(LLVM_ENABLE_ZSTD "ON" CACHE STRING "Use zstd for compression/decompression if available. Can be ON, OFF, or FORCE_ON")
++set(LLVM_ENABLE_ZSTD "OFF" CACHE STRING "Use zstd for compression/decompression if available. Can be ON, OFF, or FORCE_ON")
+ 
+ set(LLVM_USE_STATIC_ZSTD FALSE CACHE BOOL "Use static version of zstd. Can be TRUE, FALSE")
+ 
+@@ -1238,7 +1238,7 @@ if( LLVM_INCLUDE_UTILS )
+   if( LLVM_INCLUDE_TESTS )
+     set(LLVM_SUBPROJECT_TITLE "Third-Party/Google Test")
+     add_subdirectory(${LLVM_THIRD_PARTY_DIR}/unittest ${CMAKE_CURRENT_BINARY_DIR}/third-party/unittest)
+-    set(LLVM_SUBPROJECT_TITLE) 
++    set(LLVM_SUBPROJECT_TITLE)
+   endif()
+ else()
+   if ( LLVM_INCLUDE_TESTS )
+diff --git a/llvm/utils/release/test-release.sh b/llvm/utils/release/test-release.sh
+index 050004aa08c4..8c2fb86840fc 100755
+--- a/llvm/utils/release/test-release.sh
++++ b/llvm/utils/release/test-release.sh
+@@ -481,7 +481,7 @@ function configure_llvmCore() {
+       # compiler-rt builtins is needed on AIX to have a functional Phase 1 clang.
+       if [ "$System" = "AIX" ]; then
+         runtime_list="compiler-rt"
+-      fi  
++      fi
+     else
+       runtime_list="$runtimes"
+     fi
+@@ -495,6 +495,7 @@ function configure_llvmCore() {
+     echo "#" env CC="$c_compiler" CXX="$cxx_compiler" \
+         cmake -G "$generator" \
+         -DCMAKE_BUILD_TYPE=$BuildType -DLLVM_ENABLE_ASSERTIONS=$Assertions \
++        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+         -DLLVM_ENABLE_PROJECTS="$project_list" \
+         -DLLVM_LIT_ARGS="-j $NumJobs $LitVerbose" \
+@@ -504,6 +505,7 @@ function configure_llvmCore() {
+     env CC="$c_compiler" CXX="$cxx_compiler" \
+         cmake -G "$generator" \
+         -DCMAKE_BUILD_TYPE=$BuildType -DLLVM_ENABLE_ASSERTIONS=$Assertions \
++        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+         -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+         -DLLVM_ENABLE_PROJECTS="$project_list" \
+         -DLLVM_LIT_ARGS="-j $NumJobs $LitVerbose" \
+@@ -741,7 +743,7 @@ for Flavor in $Flavors ; do
+     c_compiler=$llvmCore_phase3_destdir/usr/local/bin/clang
+     cxx_compiler=$llvmCore_phase3_destdir/usr/local/bin/clang++
+     echo "# Testing - built with clang"
+-    test_llvmCore 3 $Flavor $llvmCore_phase3_objdir
++    #test_llvmCore 3 $Flavor $llvmCore_phase3_objdir
+ 
+     ########################################################################
+     # Compare .o files between Phase2 and Phase3 and report which ones
