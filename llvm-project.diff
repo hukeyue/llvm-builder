@@ -18,7 +18,7 @@ index f5293e866324..fd94e90fd045 100644
  # On z/OS, threads cannot be used because TLS is not supported.
  if (CMAKE_SYSTEM_NAME MATCHES "OS390")
 diff --git a/llvm/utils/release/test-release.sh b/llvm/utils/release/test-release.sh
-index 41240621d4cf..ce85af36da69 100755
+index 41240621d4cf..d2d5abdc26ab 100755
 --- a/llvm/utils/release/test-release.sh
 +++ b/llvm/utils/release/test-release.sh
 @@ -481,7 +481,7 @@ function configure_llvmCore() {
@@ -30,23 +30,26 @@ index 41240621d4cf..ce85af36da69 100755
      else
        runtime_list="$runtimes"
      fi
-@@ -495,6 +495,7 @@ function configure_llvmCore() {
+@@ -495,7 +495,9 @@ function configure_llvmCore() {
      echo "#" env CC="$c_compiler" CXX="$cxx_compiler" \
          cmake -G "$generator" \
          -DCMAKE_BUILD_TYPE=$BuildType -DLLVM_ENABLE_ASSERTIONS=$Assertions \
 +        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
          -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
++        -DLLVM_DEFAULT_TARGET_TRIPLE="$Triple" \
          -DLLVM_ENABLE_PROJECTS="$project_list" \
          -DLLVM_LIT_ARGS="-j $NumJobs $LitVerbose" \
-@@ -504,6 +505,7 @@ function configure_llvmCore() {
+         -DLLVM_ENABLE_RUNTIMES="$runtime_list" \
+@@ -504,6 +506,8 @@ function configure_llvmCore() {
      env CC="$c_compiler" CXX="$cxx_compiler" \
          cmake -G "$generator" \
          -DCMAKE_BUILD_TYPE=$BuildType -DLLVM_ENABLE_ASSERTIONS=$Assertions \
++        -DLLVM_DEFAULT_TARGET_TRIPLE="$Triple" \
 +        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
          -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
          -DLLVM_ENABLE_PROJECTS="$project_list" \
          -DLLVM_LIT_ARGS="-j $NumJobs $LitVerbose" \
-@@ -534,6 +536,10 @@ function build_llvmCore() {
+@@ -534,6 +538,10 @@ function build_llvmCore() {
        if [ "$System" = "AIX" ]; then
          BuildTarget="$BuildTarget runtimes"
          InstallTarget="$InstallTarget install-builtins"
@@ -57,7 +60,7 @@ index 41240621d4cf..ce85af36da69 100755
        fi
      fi
      if [ "$Phase" -eq "3" ]; then
-@@ -741,7 +747,7 @@ for Flavor in $Flavors ; do
+@@ -741,7 +749,7 @@ for Flavor in $Flavors ; do
      c_compiler=$llvmCore_phase3_destdir/usr/local/bin/clang
      cxx_compiler=$llvmCore_phase3_destdir/usr/local/bin/clang++
      echo "# Testing - built with clang"
