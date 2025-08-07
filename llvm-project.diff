@@ -18,7 +18,7 @@ index f5293e866324..fd94e90fd045 100644
  # On z/OS, threads cannot be used because TLS is not supported.
  if (CMAKE_SYSTEM_NAME MATCHES "OS390")
 diff --git a/llvm/utils/release/test-release.sh b/llvm/utils/release/test-release.sh
-index 41240621d4cf..42e0c4ca504c 100755
+index 41240621d4cf..ce85af36da69 100755
 --- a/llvm/utils/release/test-release.sh
 +++ b/llvm/utils/release/test-release.sh
 @@ -481,7 +481,7 @@ function configure_llvmCore() {
@@ -46,7 +46,18 @@ index 41240621d4cf..42e0c4ca504c 100755
          -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
          -DLLVM_ENABLE_PROJECTS="$project_list" \
          -DLLVM_LIT_ARGS="-j $NumJobs $LitVerbose" \
-@@ -741,7 +743,7 @@ for Flavor in $Flavors ; do
+@@ -534,6 +536,10 @@ function build_llvmCore() {
+       if [ "$System" = "AIX" ]; then
+         BuildTarget="$BuildTarget runtimes"
+         InstallTarget="$InstallTarget install-builtins"
++      # compiler-rt builtins is needed on darwin/linux to have a functional openmp and flang
++      elif [ "$Phase" -eq "2" ]; then
++        BuildTarget="$BuildTarget runtimes"
++        InstallTarget="$InstallTarget install-builtins"
+       fi
+     fi
+     if [ "$Phase" -eq "3" ]; then
+@@ -741,7 +747,7 @@ for Flavor in $Flavors ; do
      c_compiler=$llvmCore_phase3_destdir/usr/local/bin/clang
      cxx_compiler=$llvmCore_phase3_destdir/usr/local/bin/clang++
      echo "# Testing - built with clang"
