@@ -20,7 +20,7 @@ for Linux:
 
 ```
 docker run --rm -it --user 1000:1000 --ulimit nofile=10240:10240 --cpuset-cpus 0-5 -e HOME=$HOME -v $HOME:$HOME llvm-builder /bin/bash
-cd ~/llvm-builder && ~/llvm-project/llvm/utils/release/test-release.sh -release 20.1.8 -final -triple x86_64-linux-gnu-ubuntu-20.04 -use-ninja -no-checkout -no-test-suite -j12
+cd ~/llvm-builder && ~/llvm-project/llvm/utils/release/test-release.sh -release 20.1.8 -final -triple x86_64-pc-linux-gnu -use-ninja -no-checkout -no-test-suite -j12
 ```
 
 for macOS:
