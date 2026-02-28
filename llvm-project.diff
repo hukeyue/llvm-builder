@@ -1,8 +1,8 @@
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index f5293e866324..fd94e90fd045 100644
+index fcbfed495383..ceefaa36857a 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
-@@ -554,11 +554,11 @@ set(FFI_INCLUDE_DIR "" CACHE PATH "Additional directory, where CMake should sear
+@@ -591,11 +591,11 @@ set(FFI_INCLUDE_DIR "" CACHE PATH "Additional directory, where CMake should sear
  set(LLVM_TARGET_ARCH "host"
    CACHE STRING "Set target to use for LLVM JIT or use \"host\" for automatic detection.")
  
@@ -18,9 +18,18 @@ index f5293e866324..fd94e90fd045 100644
  # On z/OS, threads cannot be used because TLS is not supported.
  if (CMAKE_SYSTEM_NAME MATCHES "OS390")
 diff --git a/llvm/utils/release/test-release.sh b/llvm/utils/release/test-release.sh
-index 41240621d4cf..d2d5abdc26ab 100755
+index 41240621d4cf..3c806ae0c7a4 100755
 --- a/llvm/utils/release/test-release.sh
 +++ b/llvm/utils/release/test-release.sh
+@@ -292,7 +292,7 @@ if [ $do_libs = "yes" ]; then
+   fi
+ fi
+ if [ $do_openmp = "yes" ]; then
+-  projects="${projects:+$projects;}openmp"
++  runtimes="${runtimes:+$runtimes;}openmp"
+ fi
+ if [ $do_bolt = "yes" ]; then
+   projects="${projects:+$projects;}bolt"
 @@ -481,7 +481,7 @@ function configure_llvmCore() {
        # compiler-rt builtins is needed on AIX to have a functional Phase 1 clang.
        if [ "$System" = "AIX" ]; then
