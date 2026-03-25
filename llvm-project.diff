@@ -1,13 +1,10 @@
 diff --git a/llvm/CMakeLists.txt b/llvm/CMakeLists.txt
-index fcbfed495383..ceefaa36857a 100644
+index fcbfed495383..1da10c2c502d 100644
 --- a/llvm/CMakeLists.txt
 +++ b/llvm/CMakeLists.txt
-@@ -591,11 +591,11 @@ set(FFI_INCLUDE_DIR "" CACHE PATH "Additional directory, where CMake should sear
- set(LLVM_TARGET_ARCH "host"
-   CACHE STRING "Set target to use for LLVM JIT or use \"host\" for automatic detection.")
+@@ -593,9 +593,9 @@ set(LLVM_TARGET_ARCH "host"
  
--set(LLVM_ENABLE_LIBXML2 "ON" CACHE STRING "Use libxml2 if available. Can be ON, OFF, or FORCE_ON")
-+set(LLVM_ENABLE_LIBXML2 "OFF" CACHE STRING "Use libxml2 if available. Can be ON, OFF, or FORCE_ON")
+ set(LLVM_ENABLE_LIBXML2 "ON" CACHE STRING "Use libxml2 if available. Can be ON, OFF, or FORCE_ON")
  
 -option(LLVM_ENABLE_LIBEDIT "Use libedit if available." ON)
 +option(LLVM_ENABLE_LIBEDIT "Use libedit if available." OFF)
